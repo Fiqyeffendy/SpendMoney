@@ -10,11 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material.icons.filled.Star
@@ -67,7 +66,7 @@ fun DetailTransactionScreen(
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Kembali"
                         )
                     }
@@ -94,142 +93,158 @@ fun DetailTransactionScreen(
                 )
             }
         } else {
-            val categoryIcon: ImageVector = when (transaction.category.lowercase()) {
-                "makanan & minuman", "kuliner" -> Icons.Default.ShoppingCart
-                "tagihan" -> Icons.Default.Info
-                "hiburan" -> Icons.Default.Star
-                else -> Icons.Default.ShoppingCart
-            }
-
-            Column(
+            Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.SpaceBetween
+                    .padding(16.dp)
             ) {
-                Card(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.surface
-                    ),
-                    elevation = CardDefaults.cardElevation(
-                        defaultElevation = 2.dp
-                    )
+                DetailTransactionCardView(
+                    transaction = transaction,
+                    onDeleteClick = onDeleteClick
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun DetailTransactionCardView(
+    transaction: Transaction,
+    onDeleteClick: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val categoryIcon: ImageVector = when (transaction.category.lowercase()) {
+        "makanan & minuman", "kuliner" -> Icons.Default.ShoppingCart
+        "tagihan" -> Icons.Default.Info
+        "hiburan" -> Icons.Default.Star
+        else -> Icons.Default.ShoppingCart
+    }
+
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            ),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = 2.dp
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Surface(
+                    modifier = Modifier.size(64.dp),
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.primaryContainer
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(24.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Surface(
-                            modifier = Modifier.size(64.dp),
-                            shape = CircleShape,
-                            color = MaterialTheme.colorScheme.primaryContainer
-                        ) {
-                            Box(contentAlignment = Alignment.Center) {
-                                Icon(
-                                    imageVector = categoryIcon,
-                                    contentDescription = transaction.category,
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(32.dp)
-                                )
-                            }
-                        }
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Text(
-                            text = transaction.title,
-                            style = MaterialTheme.typography.titleLarge.copy(
-                                fontWeight = FontWeight.Bold
-                            ),
-                            color = MaterialTheme.colorScheme.onSurface
+                    Box(contentAlignment = Alignment.Center) {
+                        Icon(
+                            imageVector = categoryIcon,
+                            contentDescription = transaction.category,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(32.dp)
                         )
+                    }
+                }
 
-                        Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
+                Text(
+                    text = transaction.title,
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = transaction.date,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Text(
+                    text = "-${formatRupiah(transaction.amount)}",
+                    style = MaterialTheme.typography.headlineLarge.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    color = MaterialTheme.colorScheme.error
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Surface(
+                    shape = RoundedCornerShape(50),
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                    modifier = Modifier.padding(vertical = 4.dp)
+                ) {
+                    Text(
+                        text = transaction.category,
+                        style = MaterialTheme.typography.labelLarge.copy(
+                            fontWeight = FontWeight.SemiBold
+                        ),
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+                    )
+                }
+
+                if (transaction.notes.isNotBlank()) {
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.Start
+                    ) {
                         Text(
-                            text = transaction.date,
-                            style = MaterialTheme.typography.bodyMedium,
+                            text = "Catatan",
+                            style = MaterialTheme.typography.labelLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
+                        Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = "-${formatRupiah(transaction.amount)}",
-                            style = MaterialTheme.typography.headlineLarge.copy(
-                                fontWeight = FontWeight.Bold
-                            ),
-                            color = MaterialTheme.colorScheme.error
+                            text = transaction.notes,
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.onSurface
                         )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Surface(
-                            shape = RoundedCornerShape(50),
-                            color = MaterialTheme.colorScheme.primaryContainer,
-                            modifier = Modifier.padding(vertical = 4.dp)
-                        ) {
-                            Text(
-                                text = transaction.category,
-                                style = MaterialTheme.typography.labelLarge.copy(
-                                    fontWeight = FontWeight.SemiBold
-                                ),
-                                color = MaterialTheme.colorScheme.primary,
-                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
-                            )
-                        }
-
-                        if (transaction.notes.isNotBlank()) {
-                            Spacer(modifier = Modifier.height(20.dp))
-                            Column(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalAlignment = Alignment.Start
-                            ) {
-                                Text(
-                                    text = "Catatan",
-                                    style = MaterialTheme.typography.labelLarge,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
-                                Text(
-                                    text = transaction.notes,
-                                    style = MaterialTheme.typography.bodyLarge,
-                                    color = MaterialTheme.colorScheme.onSurface
-                                )
-                            }
-                        }
                     }
                 }
+            }
+        }
 
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    OutlinedButton(
-                        onClick = { /* Edit action - UI template */ },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Edit")
-                    }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            OutlinedButton(
+                onClick = { /* Edit action - UI template */ },
+                modifier = Modifier.weight(1f)
+            ) {
+                Text("Edit")
+            }
 
-                    Button(
-                        onClick = { onDeleteClick(transaction.id) },
-                        modifier = Modifier.weight(1f),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = MaterialTheme.colorScheme.error,
-                            contentColor = MaterialTheme.colorScheme.onError
-                        )
-                    ) {
-                        Text("Hapus")
-                    }
-                }
+            Button(
+                onClick = { onDeleteClick(transaction.id) },
+                modifier = Modifier.weight(1f),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.error,
+                    contentColor = MaterialTheme.colorScheme.onError
+                )
+            ) {
+                Text("Hapus")
             }
         }
     }

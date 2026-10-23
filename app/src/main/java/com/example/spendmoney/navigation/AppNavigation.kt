@@ -1,5 +1,6 @@
 package com.example.spendmoney.navigation
 
+import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
@@ -23,6 +24,7 @@ object Screen {
 
 @Composable
 fun AppNavigation(
+    windowSizeClass: WindowSizeClass,
     modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
@@ -37,6 +39,7 @@ fun AppNavigation(
     ) {
         composable(Screen.Home) {
             HomeScreen(
+                windowSizeClass = windowSizeClass,
                 transactions = transactions,
                 onAddClick = {
                     navController.navigate(Screen.AddTransaction)
@@ -49,6 +52,7 @@ fun AppNavigation(
 
         composable(Screen.AddTransaction) {
             AddTransactionScreen(
+                windowSizeClass = windowSizeClass,
                 onSaveTransaction = { newTransaction ->
                     transactions.add(0, newTransaction)
                     navController.popBackStack()
