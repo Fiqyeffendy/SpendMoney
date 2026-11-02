@@ -95,7 +95,9 @@ fun HomeScreen(
                 NavigationRailItem(
                     selected = selectedBottomItem == 0,
                     onClick = { selectedBottomItem = 0 },
-                    icon = { Icon(Icons.Default.Home, contentDescription = "Beranda") },
+                    icon = { Icon(Icons.Default.Home,
+                        tint = MaterialTheme.colorScheme.primary,
+                        contentDescription = "Beranda") },
                     label = { Text("Beranda") }
                 )
                 NavigationRailItem(
@@ -109,6 +111,12 @@ fun HomeScreen(
                     onClick = { selectedBottomItem = 2 },
                     icon = { Icon(Icons.Default.Person, contentDescription = "Akun") },
                     label = { Text("Akun") }
+                )
+                NavigationRailItem(
+                    selected = selectedBottomItem == 2,
+                    onClick = { selectedBottomItem = 2 },
+                    icon = { Icon(Icons.Default.Person, contentDescription = "Akun") },
+                    label = { Text("Setting") }
                 )
                 Spacer(modifier = Modifier.weight(1f))
             }
@@ -156,6 +164,12 @@ fun HomeScreen(
                             onClick = { selectedBottomItem = 2 },
                             icon = { Icon(Icons.Default.Person, contentDescription = "Akun") },
                             label = { Text("Akun") }
+                        )
+                        NavigationBarItem(
+                            selected = selectedBottomItem == 2,
+                            onClick = { selectedBottomItem = 2 },
+                            icon = { Icon(Icons.Default.Person, contentDescription = "Akun") },
+                            label = { Text("setting") }
                         )
                     }
                 }
