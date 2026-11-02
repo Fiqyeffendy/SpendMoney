@@ -2,6 +2,11 @@
 
 Aplikasi Android SpendMoney dibangun menggunakan **Jetpack Compose** dengan desain tata letak adaptif (*Adaptive Layout*) untuk mendukung berbagai ukuran layar (Smartphone & Tablet).
 
+# Nama Anggota Kelompok:
+
+1. Bintang Rangga Saputra - 241080200140
+2. Muchammad Fiqy Effendy - 241080200108
+
 ---
 
 ## 1. Keberadaan Syntax Adaptive Layout (`syntax adaptive berada di mana?`)
