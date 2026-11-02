@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -69,6 +70,7 @@ fun HomeScreen(
         0 -> "SpendMoney"
         1 -> "Daftar Transaksi"
         2 -> "Akun Saya"
+        3 -> "Pengaturan"
         else -> "SpendMoney"
     }
 
@@ -95,9 +97,7 @@ fun HomeScreen(
                 NavigationRailItem(
                     selected = selectedBottomItem == 0,
                     onClick = { selectedBottomItem = 0 },
-                    icon = { Icon(Icons.Default.Home,
-                        tint = MaterialTheme.colorScheme.primary,
-                        contentDescription = "Beranda") },
+                    icon = { Icon(Icons.Default.Home, contentDescription = "Beranda") },
                     label = { Text("Beranda") }
                 )
                 NavigationRailItem(
@@ -113,10 +113,10 @@ fun HomeScreen(
                     label = { Text("Akun") }
                 )
                 NavigationRailItem(
-                    selected = selectedBottomItem == 2,
-                    onClick = { selectedBottomItem = 2 },
-                    icon = { Icon(Icons.Default.Person, contentDescription = "Akun") },
-                    label = { Text("Setting") }
+                    selected = selectedBottomItem == 3,
+                    onClick = { selectedBottomItem = 3 },
+                    icon = { Icon(Icons.Default.Settings, contentDescription = "Pengaturan") },
+                    label = { Text("Pengaturan") }
                 )
                 Spacer(modifier = Modifier.weight(1f))
             }
@@ -141,9 +141,10 @@ fun HomeScreen(
                 )
             },
             bottomBar = {
-                // Adaptif: Pada layar HP portrait (Compact), gunakan Bottom Navigation Bar
+                // Adaptif: Pada layar HP portrait (Compact), gunakan Bottom Navigation Bar (Footer)
                 if (isCompactWidth) {
                     NavigationBar(
+                        // Mengganti warna container footer menu (Bottom Navigation Bar)
                         containerColor = MaterialTheme.colorScheme.surface,
                         tonalElevation = 8.dp
                     ) {
@@ -166,10 +167,10 @@ fun HomeScreen(
                             label = { Text("Akun") }
                         )
                         NavigationBarItem(
-                            selected = selectedBottomItem == 2,
-                            onClick = { selectedBottomItem = 2 },
-                            icon = { Icon(Icons.Default.Person, contentDescription = "Akun") },
-                            label = { Text("setting") }
+                            selected = selectedBottomItem == 3,
+                            onClick = { selectedBottomItem = 3 },
+                            icon = { Icon(Icons.Default.Settings, contentDescription = "Pengaturan") },
+                            label = { Text("Pengaturan") }
                         )
                     }
                 }
@@ -304,9 +305,35 @@ fun HomeScreen(
                             totalTransactionCount = transactions.size
                         )
                     }
+
+                    3 -> {
+                        // Tab Pengaturan
+                        SettingsContent()
+                    }
                 }
             }
         }
+    }
+}
+
+@Composable
+fun SettingsContent(modifier: Modifier = Modifier) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Text(
+            text = "Pengaturan Aplikasi",
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+            color = MaterialTheme.colorScheme.onBackground
+        )
+        Text(
+            text = "Menu ini digunakan untuk mengatur preferensi aplikasi seperti tema, notifikasi, mata uang, dan pilihan bahasa.",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
     }
 }
 
